@@ -1,0 +1,108 @@
+{
+	"common": {
+		"name": "yellowframe",
+		"version": "0.0.1",
+		"news": {
+			"0.0.1": {
+				"en": "initial release",
+				"de": "Erstveröffentlichung",
+				"ru": "Начальная версия",
+				"pt": "lançamento inicial",
+				"nl": "Eerste uitgave",
+				"fr": "Première version",
+				"it": "Versione iniziale",
+				"es": "Versión inicial",
+				"pl": "Pierwsze wydanie",
+				"zh-cn": "首次出版"
+			}
+		},
+		"title": "Yellow Frame - Schedule Everything",
+		"titleLang": {
+			"en": "Yellow Frame - Schedule Everything",
+			"de": "Gelber Rahmen - Planen Sie alles",
+			"ru": "Желтая рамка - Расписание всего",
+			"pt": "Moldura Amarela - Agendar Tudo",
+			"nl": "Geel kader - Alles plannen",
+			"fr": "Cadre jaune - Planifiez tout",
+			"it": "Cornice gialla - Pianifica tutto",
+			"es": "Marco amarillo: programe todo",
+			"pl": "Żółta ramka — zaplanuj wszystko",
+			"zh-cn": "黄框 - 安排一切"
+		},
+		"desc": {
+			"en": "yellowframe",
+			"de": "gelber Rahmen",
+			"ru": "желтая рамка",
+			"pt": "quadro amarelo",
+			"nl": "geel frame",
+			"fr": "cadre jaune",
+			"it": "cornice gialla",
+			"es": "marco amarillo",
+			"pl": "żółta ramka",
+			"zh-cn": "黄框"
+		},
+		"authors": [
+			"fvd1 <frederik@von-dieken.de>"
+		],
+		"keywords": [
+			"ioBroker",
+			"Adapter",
+			"Widget",
+			"smarthome",
+			"Schedule",
+			"Timer",
+			"Automation"
+		],
+		"license": "MIT",
+		"platform": "Javascript/Node.js",
+		"main": "main.js",
+		"icon": "yellowframe.png",
+		"enabled": true,
+		"extIcon": "https://raw.githubusercontent.com/fvd1/ioBroker.yellowframe/main/admin/yellowframe.png",
+		"readme": "https://github.com/fvd1/ioBroker.yellowframe/blob/main/README.md",
+		"loglevel": "info",
+		"restartAdapters": [
+			"vis"
+		],
+		"localLinks": {
+			"_default": "%web_protocol%://%ip%:%web_port%/vis/edit.html"
+		},
+		"mode": "daemon",
+		"type": "visualization-widgets",
+		"compact": true,
+		"connectionType": "local",
+		"dataSource": "poll",
+		"materialize": true,
+		"materializeTab": true,
+		"adminTab": {
+			"singleton": true,
+			"name": {
+				"en": "Yellow Frame - Schedule Everything",
+				"de": "Gelber Rahmen - Planen Sie alles",
+				"ru": "Желтая рамка - Расписание всего",
+				"pt": "Moldura Amarela - Agendar Tudo",
+				"nl": "Geel kader - Alles plannen",
+				"fr": "Cadre jaune - Planifiez tout",
+				"it": "Cornice gialla - Pianifica tutto",
+				"es": "Marco amarillo: programe todo",
+				"pl": "Żółta ramka — zaplanuj wszystko",
+				"zh-cn": "黄框 - 安排一切"
+			},
+			"link": "",
+			"fa-icon": "info"
+		},
+		"supportCustoms": true,
+		"dependencies": [
+			{
+				"js-controller": ">=2.0.0"
+			},
+			"vis"
+		]
+	},
+	"native": {
+		"option1": true,
+		"option2": "42"
+	},
+	"objects": [],
+	"instanceObjects": []
+}
