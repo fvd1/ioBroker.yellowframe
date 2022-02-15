@@ -30,3 +30,8 @@ label > i[title] {
 }
 
 /* Add your styles here */
+
+.hiddendiv {
+    visibility: hidden;
+    display: block;
+}

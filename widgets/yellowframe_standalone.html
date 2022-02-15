@@ -1,0 +1,135 @@
+<!--
+	ioBroker.vis yellowframe Widget-Set
+
+	version: "0.0.1"
+
+	Copyright 2022 fvd1 frederik@von-dieken.de
+-->
+
+<link rel="stylesheet" type="text/css" href="http://192.168.178.121:8082/vis/lib/css/jquery.multiselect-1.13.css" />
+
+<script type="text/javascript" src="http://192.168.178.121:8082/lib/js/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="http://192.168.178.121:8082/lib/js/jquery-ui-1.11.4.full.min.js"></script>
+<script type="text/javascript" src="http://192.168.178.121:8082/vis/lib/js/can.custom.min.js"></script>
+<script type="text/javascript" src="http://192.168.178.121:8082/vis/lib/js/jquery.ui.touch-punch.min.js"></script>
+<script type="text/javascript" src="http://192.168.178.121:8082/vis/lib/js/jquery.multiselect-1.13.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<script type="text/javascript" src="http://192.168.178.121:8082/js/socket.io.js"></script>
+<script type="text/javascript" src="http://192.168.178.121:8082/vis/js/conn.js"></script>
+
+
+
+<script type="text/javascript" src="yellowframe/js/suncalc.js"></script>
+
+<script type="text/javascript">
+var systemDictionary = {};
+    
+var bindList = {};
+    
+var vis = {};
+    vis.binds = [];
+    vis.conn = servConn;
+    
+    vis.states = {};
+    vis.states.bind = function(id, callback) {
+        bindList[id] = callback;
+    }
+
+    /*
+var data = {};
+    data.oid = "0_userdata.0.example_state";
+    */
+    
+vis.conn.init({
+    connLink: "192.168.178.121:8082"
+}, {
+    mayReconnect: typeof app !== 'undefined' ? app.mayReconnect : null,
+    onAuthError:  typeof app !== 'undefined' ? app.onAuthError  : null,
+    onConnChange: function (isConnected) {
+        console.log("onConnChange isConnected="+isConnected);
+
+    },
+    onRefresh:    function () {
+        window.location.reload();
+    },
+    onUpdate:     function (id, state) {
+        if(id == "system.adapter.yellowframe.0") {
+            console.log("onUpdate: " + id + " -> " + state);
+        }
+        if(bindList[id]) {
+            console.log("change");
+            bindList[id](null, state, null);
+        }
+    },
+    onAuth:       function (message, salt) {
+        console.log("onAuth");
+    },
+    onCommand:    function (instance, command, data) {
+        console.log("onCommand");
+        return true;
+    },
+    onObjectChange: function(id, obj) {
+        console.log("onObjectChange: " + id + " -> " + obj);
+        
+        if(id == "system.adapter.yellowframe.0") {
+        }
+    },
+    onError:      function (err) {
+        console.log(err);
+    }
+
+}, true, true);
+
+    
+</script>
+
+<!-- here you can include so many css as you want -->
+<link rel="stylesheet" href="yellowframe/css/style.css" />
+<!-- here you can include so many js-files as you want -->
+<script type="text/javascript" src="yellowframe/js/yellowframe.js"></script>
+
+
+
+	<div class="vis-widget <%== this.data.attr('class') %>" style="overflow:visible; width: 200px; height: 150px; position: absolute; top:0px;" id="YF1">
+        <script type="text/javascript">
+            $(function(){
+                let data1 = {};
+                data1.oid = "0_userdata.0.example_state";
+                vis.binds['yellowframe'].createTimelineWidget("YF1", "", data1, "");
+            });
+        </script>
+    </div>
+
+    <div class="vis-widget <%== this.data.attr('class') %>" style="overflow:visible; width: 200px; height: 150px; position: absolute; top:200px;" id="YF2">
+        <script type="text/javascript">
+            $(function(){
+                let data2 = {};
+                data2.oid = "0_userdata.0.example_state_2";
+                vis.binds['yellowframe'].createTimelineWidget("YF2", "", data2, "");
+            });
+        </script>
+    </div>
+
+	<div class="vis-widget <%== this.data.attr('class') %>" style="overflow:visible; width: 200px; height: 150px; position: absolute; top:400px;" id="YF3">
+        <script type="text/javascript">
+            $(function(){
+                let data3 = {};
+                data3.oid = "0_userdata.0.example_state_3";
+                vis.binds['yellowframe'].createTimelineWidget("YF3", "", data3, "");
+            });
+        </script>
+    </div>
+
+    <div class="vis-widget <%== this.data.attr('class') %>" style="overflow:visible; width: 200px; height: 150px; position: absolute; top:600px;" id="YF4">
+        <script type="text/javascript">
+            $(function(){
+                let data4 = {};
+                data4.oid = "0_userdata.0.example_state_4";
+                vis.binds['yellowframe'].createTimelineWidget("YF4", "", data4, "");
+            });
+        </script>
+    </div>

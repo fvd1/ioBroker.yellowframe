@@ -2,3 +2,237 @@
 .yellowframe-class {
 	font-style: italic;
 }
+
+#index2 {
+	background: #eee;
+}
+
+text {
+  font-family: 'helvetica';
+}
+
+.container {
+	background: #eee;
+	height: 200px;
+	padding: 20px;
+	position: relative;
+}
+
+.yellowframe {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 4px solid #ffea00;
+  filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.1));
+}
+
+.yellowframe.offline {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 4px solid #ff0000;
+  filter: drop-shadow(3px 5px 2px rgb(0 0 0 / 0.1));
+}
+.yellowframe.inactive {
+  border: 4px solid #c0c0c0;
+}
+.yellowframe .control .material-icons {
+    font-size: 4rem;
+    color: #fff;
+}
+
+.yellowframe .control .duration {
+    font-size: 0.9rem;
+}
+
+.timeline {
+    width: 100%;
+    height: auto;
+}
+
+.modal {
+    max-height: 100%;
+}
+
+.modal .modal-content {
+    padding: 0;
+}
+
+.modal-overlay {
+  pointer-events: auto;
+}
+
+
+.timeline .astro #pointer {
+    fill: #cccccc;
+}
+
+.row.off {
+    margin-bottom: 0px;
+}
+
+.collapsible {
+    border: 0px;
+    margin: 0;
+    padding: 0px;
+}
+
+.collapsible .collapsible-body {
+    padding: 1rem;
+}
+
+
+.yellowframe > DIV {
+  pointer-events: auto;
+}
+
+.yellowframe .frame {
+  pointer-events: none;
+	height: 100%;
+}
+
+.yellowframe .control {
+  width: 70px;
+  height: 70px;
+  bottom: -35px;
+  right: -35px;
+  position: absolute;
+}
+
+.yellowframe .modal {
+  pointer-events: auto;
+}
+
+.yellowframe > div {
+
+}
+
+.overwritten {
+    opacity: 0.5;
+}
+
+#modal1 {
+}
+
+
+svg {
+	--bgcolor: #fdfcf3;
+  --framecolor: #ffea00;
+	--primarycolor: #306f91;
+	--accent1color: #dfac20;
+	--accent2color: #c32e04;
+	height: 100%;
+  width; 100%;
+}
+
+.timeline {
+    /*width: 600px;*/
+    margin-bottom: 15px;
+}
+
+div.row.nomargin {
+    margin-bottom: 0px
+}
+
+.timelinedata path {
+    stroke: #FF6E6E;
+    stroke-width: 4;
+}
+
+#clockface {
+	fill: var(--bgcolor);
+	stroke: var(--framecolor);
+	stroke-width: 10;
+  filter: drop-shadow(6px 5px 5px rgb(0 0 0 / 0.4));
+}
+
+#indizes > use,
+.hand {
+	stroke: var(--primarycolor);
+	stroke-width: 6;
+	stroke-linecap: round;
+}
+
+#indizes > use:nth-child(3n+1) {
+	stroke-width: 9;
+}
+
+#hours {
+	stroke: var(--primarycolor);
+	stroke-width: 8;
+}
+
+#minutes {
+	stroke: var(--primarycolor);
+	stroke-width: 5;
+	transform: rotate(33deg);
+}
+
+#seconds {
+	stroke: var(--accent2color);
+	transform: rotate(9deg);
+}
+
+.loading {
+	fill: none;
+	stroke: #306f91;
+	stroke-width: 10;
+	stroke-dasharray: 30 10;
+	animation: strokeAni .7s infinite linear;
+}
+
+@keyframes strokeAni {
+	0% {
+		stroke-dashoffset: 40;
+	}
+	100% {
+		stroke-dashoffset: 0;
+	}
+}
+
+
+.yellow {
+  box-shadow: 0 0 0 0 rgba(255, 236, 0, 1);
+  animation: pulse-yellow 2s infinite;
+}
+
+@keyframes pulse-yellow {
+  0% {
+
+    box-shadow: 0 0 0 0 rgba(255, 236, 0, 0.7);
+  }
+  
+  70% {
+
+    box-shadow: 0 0 0 10px rgba(255, 236, 0, 0);
+  }
+  
+  100% {
+
+    box-shadow: 0 0 0 0 rgba(255, 236, 0, 0);
+  }
+}
+
+.offline .control2 {
+  box-shadow: 0 0 0 0 rgba(255, 0, 0, 1);
+  animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+  0% {
+
+    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+  }
+  
+  70% {
+
+    box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+  }
+  
+  100% {
+
+    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+  }
+}
