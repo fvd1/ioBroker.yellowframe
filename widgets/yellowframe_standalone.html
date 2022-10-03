@@ -8,18 +8,23 @@
 
 <link rel="stylesheet" type="text/css" href="http://192.168.178.121:8082/vis/lib/css/jquery.multiselect-1.13.css" />
 
+<script type="text/javascript" src="http://192.168.178.121:8082/lib/js/translate.js"></script>
 <script type="text/javascript" src="http://192.168.178.121:8082/lib/js/jquery-1.11.2.min.js"></script>
 <script type="text/javascript" src="http://192.168.178.121:8082/lib/js/jquery-ui-1.11.4.full.min.js"></script>
 <script type="text/javascript" src="http://192.168.178.121:8082/vis/lib/js/can.custom.min.js"></script>
 <script type="text/javascript" src="http://192.168.178.121:8082/vis/lib/js/jquery.ui.touch-punch.min.js"></script>
 <script type="text/javascript" src="http://192.168.178.121:8082/vis/lib/js/jquery.multiselect-1.13.min.js"></script>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
 <script type="text/javascript" src="http://192.168.178.121:8082/js/socket.io.js"></script>
 <script type="text/javascript" src="http://192.168.178.121:8082/vis/js/conn.js"></script>
+
+<!-- here you can include so many css as you want -->
+<link rel="stylesheet" href="yellowframe/css/style.css" />
+<!-- here you can include so many js-files as you want -->
+<script type="text/javascript" src="yellowframe/js/yellowframe.js"></script>
+
+<link rel="stylesheet" href="yellowframe/css/materialize.css">
+<script src="yellowframe/js/materialize.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 
 
@@ -38,11 +43,6 @@ var vis = {};
     vis.states.bind = function(id, callback) {
         bindList[id] = callback;
     }
-
-    /*
-var data = {};
-    data.oid = "0_userdata.0.example_state";
-    */
     
 vis.conn.init({
     connLink: "192.168.178.121:8082"
@@ -87,49 +87,77 @@ vis.conn.init({
     
 </script>
 
-<!-- here you can include so many css as you want -->
-<link rel="stylesheet" href="yellowframe/css/style.css" />
-<!-- here you can include so many js-files as you want -->
-<script type="text/javascript" src="yellowframe/js/yellowframe.js"></script>
 
 
 
-	<div class="vis-widget <%== this.data.attr('class') %>" style="overflow:visible; width: 200px; height: 150px; position: absolute; top:0px;" id="YF1">
+	<div class="vis-widget" style="overflow:visible; width: 200px; height: 150px; position: absolute; top:0px;" id="YF1">
         <script type="text/javascript">
             $(function(){
-                let data1 = {};
-                data1.oid = "0_userdata.0.example_state";
-                vis.binds['yellowframe'].createTimelineWidget("YF1", "", data1, "");
+                let data1 = {
+                    oid: "0_userdata.0.example_state",
+                    attr: function(el){
+                        let attr = {
+                            editable: true
+                        }
+                        
+                        return attr[el]
+                    }
+                }
+                vis.binds['yellowframe'].createFrameWidget("YF1", "", data1, "");
             });
         </script>
     </div>
 
-    <div class="vis-widget <%== this.data.attr('class') %>" style="overflow:visible; width: 200px; height: 150px; position: absolute; top:200px;" id="YF2">
+    <div class="vis-widget" style="overflow:visible; width: 200px; height: 150px; position: absolute; top:200px;" id="YF2">
         <script type="text/javascript">
             $(function(){
-                let data2 = {};
-                data2.oid = "0_userdata.0.example_state_2";
-                vis.binds['yellowframe'].createTimelineWidget("YF2", "", data2, "");
+                let data2 = {
+                    oid: "0_userdata.0.example_state_2",
+                    attr: function(el){
+                        let attr = {
+                            editable: true
+                        }
+                        
+                        return attr[el]
+                    }
+                }
+                vis.binds['yellowframe'].createFrameWidget("YF2", "", data2, "");
             });
         </script>
     </div>
 
-	<div class="vis-widget <%== this.data.attr('class') %>" style="overflow:visible; width: 200px; height: 150px; position: absolute; top:400px;" id="YF3">
+	<div class="vis-widget" style="overflow:visible; width: 200px; height: 150px; position: absolute; top:400px;" id="YF3">
         <script type="text/javascript">
             $(function(){
-                let data3 = {};
-                data3.oid = "0_userdata.0.example_state_3";
-                vis.binds['yellowframe'].createTimelineWidget("YF3", "", data3, "");
+                let data3 = {
+                    oid: "0_userdata.0.example_state_3",
+                    attr: function(el){
+                        let attr = {
+                            editable: true
+                        }
+                        
+                        return attr[el]
+                    }
+                }
+                vis.binds['yellowframe'].createFrameWidget("YF3", "", data3, "");
             });
         </script>
     </div>
 
-    <div class="vis-widget <%== this.data.attr('class') %>" style="overflow:visible; width: 200px; height: 150px; position: absolute; top:600px;" id="YF4">
+    <div class="vis-widget" style="overflow:visible; width: 200px; height: 150px; position: absolute; top:600px;" id="YF4">
         <script type="text/javascript">
             $(function(){
-                let data4 = {};
-                data4.oid = "0_userdata.0.example_state_4";
-                vis.binds['yellowframe'].createTimelineWidget("YF4", "", data4, "");
+                let data4 = {
+                    oid: "0_userdata.0.example_state_4",
+                    attr: function(el){
+                        let attr = {
+                            editable: true
+                        }
+                        
+                        return attr[el]
+                    }
+                }
+                vis.binds['yellowframe'].createFrameWidget("YF4", "", data4, "");
             });
         </script>
     </div>

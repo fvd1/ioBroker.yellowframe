@@ -1,0 +1,352 @@
+<html>
+
+<head>
+
+	<!-- Load ioBroker scripts and styles-->
+	<link rel="stylesheet" type="text/css" href="../../css/adapter.css" />
+	<link rel="stylesheet" type="text/css" href="../../lib/css/materialize.css">
+
+	<script type="text/javascript" src="../../lib/js/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="../../socket.io/socket.io.js"></script>
+
+	<script type="text/javascript" src="../../js/translate.js"></script>
+	<script type="text/javascript" src="../../lib/js/materialize.js"></script>
+	<script type="text/javascript" src="../../js/adapter-settings.js"></script>
+
+
+    <script type="text/javascript"          src="../../lib/js/jquery-ui.min.js"></script>
+    <script type="text/javascript"          src="../../lib/js/jquery.fancytree-all.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../lib/css/fancytree/ui.fancytree.min.css"/>
+    <script type="text/javascript"          src="../../lib/js/selectID.js"></script>
+
+	<!-- Load our own files -->
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<script type="text/javascript" src="words.js"></script>
+
+
+    <style>
+
+        #dialog-room-edit {
+            max-height: 95% !important;
+            max-width: 85% !important;
+            width: 80% !important;
+            height: 90% !important;
+            overflow: visible !important;
+            top: 10px !important;
+        }
+
+        #dialog-select-member {
+            max-height: 95% !important;
+            max-width: 85% !important;
+            width: 80% !important;
+            height: 90% !important;
+            overflow: visible !important;
+            top: 10px !important;
+        }
+
+
+        redlabel {
+            color: red;
+        }
+    </style>
+
+	<script type="text/javascript">
+		// This will be called by the admin adapter when the settings page loads
+		function load(settings, onChange) {
+			// example: select elements with id=key and class=value and insert value
+			if (!settings) return;
+			$('.value').each(function () {
+				var $key = $(this);
+				var id = $key.attr('id');
+				if ($key.attr('type') === 'checkbox') {
+					// do not call onChange direct, because onChange could expect some arguments
+					$key.prop('checked', settings[id])
+						.on('change', () => onChange())
+						;
+				} else {
+					// do not call onChange direct, because onChange could expect some arguments
+					$key.val(settings[id])
+						.on('change', () => onChange())
+						.on('keyup', () => onChange())
+						;
+				}
+			});
+			onChange(false);
+			// reinitialize all the Materialize labels on the page if you are dynamically adding inputs:
+			if (M) M.updateTextFields();
+		}
+
+		// This will be called by the admin adapter when the user presses the save button
+		function save(callback) {
+			// example: select elements with class=value and build settings object
+			var obj = {};
+			$('.value').each(function () {
+				var $this = $(this);
+				if ($this.attr('type') === 'checkbox') {
+					obj[$this.attr('id')] = $this.prop('checked');
+				} else if ($this.attr('type') === 'number') {
+					obj[$this.attr('id')] = parseFloat($this.val());
+				} else {
+					obj[$this.attr('id')] = $this.val();
+				}
+			});
+			callback(obj);
+		}
+
+
+/**
+ * From: selectID.js (node_modules/iobroker.admin/www/lib/js/)
+ * Name "dialog-select-member" is important, because for that exist the CSS classes
+ * Important to have "admin/img/big-info.png", because this icon will be loaded if no icon found, otherwise we have endless loop
+ */
+        var selectId;
+        function initSelectId(callback) {
+            if (selectId) {
+                return callback(selectId);
+            }
+            socket.emit('getObjects', function (err, objs) {
+                selectId = $('#dialog-select-member').selectId('init', {
+                    noMultiselect: true,
+                    objects: objs,
+                    imgPath: '../../lib/css/fancytree/',
+                    filter: { type: 'state' },
+                    name: 'adapter-select-state',
+                    texts: {
+                        select: _('Select'),
+                        cancel: _('Cancel'),
+                        all: _('All'),
+                        id: _('ID'),
+                        name: _('Name'),
+                        role: _('Role'),
+                        room: _('Room'),
+                        value: _('Value'),
+                        selectid: _('Select ID'),
+                        from: _('From'),
+                        lc: _('Last changed'),
+                        ts: _('Time stamp'),
+                        wait: _('Processing...'),
+                        ack: _('Acknowledged'),
+                        selectAll: _('Select all'),
+                        unselectAll: _('Deselect all'),
+                        invertSelection: _('Invert selection')
+                    },
+                    columns: ['image', 'name', 'role', 'room']
+                });
+                callback(selectId);
+            });
+        }
+
+/**
+ * Opens the dialog for state selection.
+ * Using selectID.js (node_modules/iobroker.admin/www/lib/js/)
+ * It monitors a button for a click, and writes the selected state into a field.
+ *
+ * @param {string}  tableId     - The id of the table, like 'tableTargetDevices'
+ * @param {string}  dataCommand - Name of [data-buttons="edit1"] of the <th>. so like 'edit1'.
+ *                                If you use multiple buttons per table row, use like 'edit1', 'edit2' for 'data-buttons=' in <th>
+ * @param {string}  targetField - The target field, like 'onState' (of data-name="onState")
+ */
+function statePathPopupSelection(tableId, dataCommand, targetField) { 
+    
+    const queryResult = $(`#${tableId} a.values-buttons[data-command="${dataCommand}"]`);
+    queryResult.on('click', function() {
+        const id = $(this).data('index');
+        initSelectId(function (sid) {
+            sid.selectId('show', $(`#${tableId} .values-input[data-name="${targetField}"][data-index="${id}"]`).val(), function (statePath) {
+                if (statePath) {
+                    // We have a selected state, so let's fill the target field
+                    $(`#${tableId} .values-input[data-name="${targetField}"][data-index="${id}"]`).val(statePath).trigger('change');
+                }
+            });
+        });
+    });
+
+}
+
+$(function() {
+
+	$('#offDayObject_btn').on('click', function () {
+	    initSelectId(function (sid) {
+	        sid.selectId('show', $('#offDayObject').val(), function (newId) {
+	            if (newId) {
+	                $('#offDayObject').val(newId).trigger('change');
+	            }
+	        });
+	    });
+	});
+
+	$('#guestObject_btn').on('click', function () {
+	    initSelectId(function (sid) {
+	        sid.selectId('show', $('#guestObject').val(), function (newId) {
+	            if (newId) {
+	                $('#guestObject').val(newId).trigger('change');
+	            }
+	        });
+	    });
+	});
+    
+    $('#dayAtHomeObject_btn').on('click', function () {
+        initSelectId(function (sid) {
+            sid.selectId('show', $('#dayAtHomeObject').val(), function (newId) {
+                if (newId) {
+                    $('#dayAtHomeObject').val(newId).trigger('change');
+                }
+            });
+        });
+    });
+
+})
+
+	</script>
+
+</head>
+
+<body>
+
+	<div class="m adapter-container">
+
+		<div class="row">
+			<div class="col s12 m4 l2">
+				<img src="yellowframe.png" class="logo">
+			</div>
+		</div>
+
+		<!-- Put your content here -->
+		Hallo TEST ! :)
+
+		<!-- For example columns with settings: -->
+		<div class="row">
+			<div class="col s3 input-field">
+				<textarea id="defaultConfig" class="value materialize-textarea" data-length="120"></textarea>
+				<label for="defaultConfig" class="translate">defaultConfig</label>
+			</div>
+			<div class="col s3 input-field">
+				<textarea id="defaultConfigNumber" class="value materialize-textarea" data-length="120"></textarea>
+				<label for="defaultConfigNumber" class="translate">defaultConfigNumber</label>
+			</div>
+			<div class="col s3 input-field">
+				<textarea id="defaultConfigBoolean" class="value materialize-textarea" data-length="120"></textarea>
+				<label for="defaultConfigBoolean" class="translate">defaultConfigBoolean</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col s3 input-field">
+				<textarea id="defaultSceduleNumber" class="value materialize-textarea" data-length="120"></textarea>
+				<label for="defaultSceduleNumber" class="translate">defaultSceduleNumber</label>
+			</div>
+			<div class="col s3 input-field">
+				<textarea id="defaultSceduleBoolean" class="value materialize-textarea" data-length="120"></textarea>
+				<label for="defaultSceduleBoolean" class="translate">defaultSceduleBoolean</label>
+			</div>
+		</div>
+		<!-- For example columns with settings: -->
+		<div class="row">
+			<div class="col s3 input-field">
+				<p>
+				<label>
+				<input type="checkbox" name="useOwnFields" id="useOwnFields" class="filled-in" checked="checked" />
+				<span>useOwnFields</span>
+				</label>
+				</p>
+			</div>
+
+		</div>
+        <div class="row">
+            <div class="input-field col s3">
+                <input type="text" id="offDayObject" class="value" />
+                <label for="offDayObject" class="translate">offDayObject</label>
+
+            </div>
+            <div class="col s1">
+                <a id="offDayObject_btn" class="btn-floating waves-effect waves-light blue table-button-add"><i class="material-icons">add</i></a>
+            </div>
+
+        </div>
+        <div class="row">
+
+            <div class="input-field col s3">
+                <input type="text" id="guestObject" class="value" />
+                <label for="guestObject" class="translate">guestObject</label>
+
+            </div>
+            <div class="col s1">
+                <a id="guestObject_btn" class="btn-floating waves-effect waves-light blue table-button-add"><i class="material-icons">add</i></a>
+            </div>
+
+        </div>
+        <div class="row">
+    
+            <div class="input-field col s3">
+                <input type="text" id="dayAtHomeObject " class="value" />
+                <label for="dayAtHomeObject" class="translate">dayAtHomeObject</label>
+
+            </div>
+            <div class="col s1">
+                <a id="dayAtHomeObject_btn" class="btn-floating waves-effect waves-light blue table-button-add"><i class="material-icons">add</i></a>
+            </div>
+
+        </div>
+
+
+
+        <div class="m material-dialogs">     
+            <!-- DIALOG: Select Settings (like Triggers or Target Devices) -->
+            <div id="dialog-select-settings" class="modal modal-fixed-footer">
+                <div class="modal-content">
+                    <div class="row">
+                        <div class="col s12">
+                            <h6 class="title"><span class="translate">Placeholder (will be replaced by jQuery)</span></h6>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-left:12px; padding-right:12px">
+                        <div class="row">
+                            <a id="fancy-collapse-all" class="btn-floating btn-small waves-effect waves-light" title="Collapse all nodes"><i class="material-icons">folder</i></a>
+                            <a id="fancy-expand-all" class="btn-floating btn-small waves-effect waves-light" title="Expand all nodes"><i class="material-icons">folder_open</i></a>
+                            <button id="btnResetSearch" disabled="disabled" class="btn-floating btn-small waves-effect waves-green"><i class="material-icons">clear</i></button>
+                            <input id="fancy-filter-input" class="value fancy-filter" name="search" placeholder="Filter..." autocomplete="off">
+                            <label for="fancy-filter-input"></label>
+                            <div id="matches"></div>
+                        </div>
+                        <div class="row" id="fancy-explanation"> <!-- will be hidden if editTargetVals is false -->
+                            <!-- Importing Markdown -->
+                            <zero-md id="md-tableZonesSelectTargets" manual-render src="doc-md/table-zones_select-targets_en.md"></zero-md>
+                            <!-- <span class="translate">dialog.selectSettings.explanation</span> -->
+                        </div>
+                        <!-- The Fancy Tree -->
+                        <div class="row" id="fancytree-select-settings"></div>
+                        <!-- The Fancy Tree -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a class="modal-action modal-close waves-effect waves-green btn btn-set"><i class="large material-icons left">check_circle</i><span class="translate">Select</span></a>
+                    <a class="modal-action modal-close waves-effect waves-green btn btn-close"><i class="large material-icons left">cancel</i><span class="translate">Cancel</span></a>
+                </div>
+            </div>
+
+
+            <!-- DIALOG: State Selection (SelectId). #dialog-select-member is a ioBroker ID we are using -->
+            <div id="dialog-select-member" class="modal modal-fixed-footer">
+                <div class="modal-content">
+                    <div class="row">
+                        <div class="col s12 title"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 dialog-content">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a class="modal-action modal-close waves-effect waves-green btn btn-set"><i class="large material-icons left">check_circle</i><span class="translate">Select</span></a>
+                    <a class="modal-action modal-close waves-effect waves-green btn btn-close"><i class="large material-icons left">cancel</i><span class="translate">Cancel</span></a>
+                </div>
+            </div>        
+        </div>
+
+
+
+
+	</div>
+
+</body>
+
+</html>
